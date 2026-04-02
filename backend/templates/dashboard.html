@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Dashboard | NexusCommunity{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+{% block content %}
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-label">Total Topics</div>
+    <div class="stat-value">{{ topic_count }}</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Total Forumposts</div>
+    <div class="stat-value" style="background:linear-gradient(135deg,#10b981,#06b6d4);-webkit-background-clip:text;background-clip:text">{{ forumpost_count }}</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Total Forummembers</div>
+    <div class="stat-value" style="background:linear-gradient(135deg,#f59e0b,#f97316);-webkit-background-clip:text;background-clip:text">{{ forummember_count }}</div>
+  </div>
+</div>
+
+<div class="card">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+    <h3>Recent Topics</h3>
+    <a href="/topics/create/" class="btn btn-primary btn-sm">+ New Topic</a>
+  </div>
+  {% if recent %}
+  <table>
+    <thead>
+      <tr><th>Title</th><th>Category</th><th>Author</th><th>Replies</th><th>Views</th><th>Created</th></tr>
+    </thead>
+    <tbody>
+      {% for r in recent %}
+      <tr>
+        <td><a href="/topics/{{ r.pk }}/edit/">{{ r.title }}</a></td>
+        <td>{{ r.category|default:"-" }}</td><td>{{ r.author|default:"-" }}</td><td>{{ r.replies|default:"-" }}</td><td>{{ r.views|default:"-" }}</td><td style="color:var(--muted)">{{ r.created_at|date:"M d, Y" }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty">
+    <p>No records yet.</p>
+    <a href="/topics/create/" class="btn btn-primary" style="margin-top:1rem">Create First Topic</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
