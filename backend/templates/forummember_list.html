@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Forummembers | NexusCommunity{% endblock %}
+{% block page_title %}Forummembers{% endblock %}
+{% block content %}
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem">
+  <form class="search-bar" method="get" style="flex:1;margin-bottom:0">
+    <input type="text" name="search" value="{{ search }}" placeholder="Search forummembers...">
+    <select name="status" onchange="this.form.submit()">
+      <option value="">All Role</option>
+      <option value="member" {% if status_filter == 'member' %}selected{% endif %}>Member</option>
+      <option value="moderator" {% if status_filter == 'moderator' %}selected{% endif %}>Moderator</option>
+      <option value="admin" {% if status_filter == 'admin' %}selected{% endif %}>Admin</option>
+    </select>
+    <button type="submit" class="btn btn-primary btn-sm">Search</button>
+  </form>
+  <a href="/forummembers/create/" class="btn btn-primary">+ New ForumMember</a>
+</div>
+
+<div class="card">
+  {% if records %}
+  <table>
+    <thead>
+      <tr><th>Username</th><th>Email</th><th>Join Date</th><th>Posts</th><th>Reputation</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+      {% for r in records %}
+      <tr>
+        <td><a href="/forummembers/{{ r.pk }}/edit/"><strong>{{ r.username }}</strong></a></td>
+        <td style="color:var(--muted)">{{ r.email|default:"-" }}</td>
+        <td style="color:var(--muted)">{{ r.join_date|date:"M d, Y"|default:"-" }}</td>
+        <td>{{ r.posts|default:"-" }}</td>
+        <td>{{ r.reputation|default:"-" }}</td>
+        <td class="actions">
+          <a href="/forummembers/{{ r.pk }}/edit/" class="btn btn-primary btn-sm">Edit</a>
+          <form method="post" action="/forummembers/{{ r.pk }}/delete/" style="display:inline" onsubmit="return confirm('Delete?')">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger btn-sm">Del</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty">
+    <p>No forummembers found.</p>
+    <a href="/forummembers/create/" class="btn btn-primary" style="margin-top:1rem">Create ForumMember</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
