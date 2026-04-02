@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}{% if editing %}Edit{% else %}New{% endif %} ForumPost | NexusCommunity{% endblock %}
+{% block page_title %}{% if editing %}Edit ForumPost{% else %}New ForumPost{% endif %}{% endblock %}
+{% block content %}
+<div class="card" style="max-width:750px">
+  <form method="post">
+    {% csrf_token %}
+    <div class="form-row">
+      <div class="form-group">
+        <label>Topic Title</label>
+        <input type="text" name="topic_title" value="{{ record.topic_title|default:'' }}">
+      </div>
+      <div class="form-group">
+        <label>Author</label>
+        <input type="text" name="author" value="{{ record.author|default:'' }}">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Content</label>
+      <textarea name="content">{{ record.content|default:'' }}</textarea>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Date</label>
+        <input type="date" name="date" value="{{ record.date|date:'Y-m-d'|default:'' }}">
+      </div>
+      <div class="form-group">
+        <label>Likes</label>
+        <input type="number" name="likes" value="{{ record.likes|default:'0' }}">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Status</label>
+        <select name="status">
+          <option value="published" {% if record.status == 'published' %}selected{% endif %}>Published</option>
+          <option value="flagged" {% if record.status == 'flagged' %}selected{% endif %}>Flagged</option>
+          <option value="hidden" {% if record.status == 'hidden' %}selected{% endif %}>Hidden</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="checkbox-wrapper">
+        <input type="checkbox" name="is_solution" id="id_is_solution" {% if record.is_solution %}checked{% endif %}>
+        <label for="id_is_solution" style="margin-bottom:0">Is Solution</label>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:0.75rem;margin-top:1rem">
+      <button type="submit" class="btn btn-primary">{% if editing %}Update{% else %}Create{% endif %} ForumPost</button>
+      <a href="/forumposts/" class="btn" style="background:var(--border);color:var(--text)">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}
